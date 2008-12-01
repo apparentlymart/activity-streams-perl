@@ -3,7 +3,7 @@ use strict;
 use Test::More tests => 9;
 use XML::Atom;
 use XML::Atom::Feed;
-use XML::Atom::Activity::Entry;
+use XML::Atom::Activity::ActivityEntry;
 
 # This is like 01-verbsandtypes except that we don't
 # re-bless our objects into the Activity classes
@@ -24,8 +24,8 @@ my $entry = $entries[0];
 
 ok($entry->isa('XML::Atom::Entry'), "entry is of the right class");
 
-my @verbs = $entry->XML::Atom::Activity::Entry::activity_verbs;
-my @object_types = $entry->XML::Atom::Activity::Entry::activity_object_types;
+my @verbs = $entry->XML::Atom::Activity::ActivityEntry::activity_verbs;
+my @object_types = $entry->XML::Atom::Activity::ActivityEntry::activity_object_types;
 
 ok(scalar(@verbs) == 2, "Two verbs in entry");
 ok(scalar(@object_types) == 2, "Two object_types in entry");

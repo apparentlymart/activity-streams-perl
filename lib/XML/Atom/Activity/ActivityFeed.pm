@@ -1,11 +1,11 @@
 #!/usr/bin/perl
 
-package XML::Atom::Activity::Feed;
+package XML::Atom::Activity::ActivityFeed;
 
 use strict;
 use base qw(XML::Atom::Feed);
 
-use XML::Atom::Activity::Entry;
+use XML::Atom::Activity::ActivityEntry;
 
 use XML::Atom;
 use Carp;
@@ -28,7 +28,7 @@ sub entries {
     my @entries = $feed->SUPER::entries(@other_args);
 
     foreach my $entry (@entries) {
-        XML::Atom::Activity::Entry->rebless_plain_entry($entry);
+        XML::Atom::Activity::ActivityEntry->rebless_plain_entry($entry);
     }
 
     return @entries;

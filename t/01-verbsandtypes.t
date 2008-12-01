@@ -1,12 +1,12 @@
 
 use strict;
 use Test::More tests => 9;
-use XML::Atom::Activity::Feed;
-use XML::Atom::Activity::Entry;
+use XML::Atom::Activity::ActivityFeed;
+use XML::Atom::Activity::ActivityEntry;
 
 my $data = join('', <DATA>);
 
-my $feed = XML::Atom::Activity::Feed->new(\$data);
+my $feed = XML::Atom::Activity::ActivityFeed->new(\$data);
 
 ok(defined($feed), "instantiate feed");
 
@@ -16,7 +16,7 @@ ok(scalar(@entries) == 1, "one entry in feed");
 
 my $entry = $entries[0];
 
-ok($entry->isa('XML::Atom::Activity::Entry'), "entry is of the right class");
+ok($entry->isa('XML::Atom::Activity::ActivityEntry'), "entry is of the right class");
 
 my @verbs = $entry->activity_verbs;
 my @object_types = $entry->activity_object_types;

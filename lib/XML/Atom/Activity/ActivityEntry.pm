@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-package XML::Atom::Activity::Entry;
+package XML::Atom::Activity::ActivityEntry;
 
 use strict;
 use base qw(XML::Atom::Entry);
