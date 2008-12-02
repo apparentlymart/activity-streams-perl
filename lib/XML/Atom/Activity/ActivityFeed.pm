@@ -27,8 +27,15 @@ sub entries {
 
     my @entries = $feed->SUPER::entries(@other_args);
 
+    my $idx = 0;
     foreach my $entry (@entries) {
-        XML::Atom::Activity::ActivityEntry->rebless_plain_entry($entry);
+        if ($entry->XML::Atom::Activity::ActivityEntry::entry_is_activity($entry)) {
+            XML::Atom::Activity::ActivityEntry::rebless_plain_entry($entry);
+        }
+        else {
+            $entries[$idx] = $entry->XML::Atom::Activity::ObjectEntry::make_post_activity;
+        }
+        $idx++;
     }
 
     return @entries;

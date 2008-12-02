@@ -58,6 +58,13 @@ sub activity_object {
     }
 }
 
+sub entry_is_activity {
+    my $entry = shift;
+
+    my $verbs = $entry->XML::Atom::Activity::ActivityEntry::activity_verbs;
+    return scalar(@$verbs) ? 1 : 0;
+}
+
 1;
 
 =head1 NAME
