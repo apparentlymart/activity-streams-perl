@@ -1,6 +1,6 @@
 
 use strict;
-use Test::More tests => 12;
+use Test::More tests => 14;
 use XML::Atom;
 use XML::Atom::Activity::ActivityFeed;
 
@@ -39,14 +39,12 @@ is($types->[0], 'http://activitystrea.ms/schema/1.0/weblog-entry', 'Object is a 
 
 is($object->title, 'Activity Streams are Great!', 'Object title is correct');
 
-print $object->as_xml;
-
 my @object_links = $object->link;
 
-ok(scalar(@object_links) == 2, 'Object has two links');
+ok(scalar(@object_links) == 1, 'Object has one link');
 
-is($object_links[0]->rel, 'alternate', "First link is rel=alternate");
-is($object_links[1]->rel, 'application/atom+xml', "Second link is application/atom+xml");
+is($object_links[0]->rel, 'alternate', "Link is rel=alternate");
+is($object_links[0]->type, 'text/html', "Link is text/html");
 
 my @activity_links = $entry->link;
 

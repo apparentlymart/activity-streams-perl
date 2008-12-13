@@ -30,10 +30,10 @@ sub entries {
     my $idx = 0;
     foreach my $entry (@entries) {
         if ($entry->XML::Atom::Activity::ActivityEntry::entry_is_activity($entry)) {
-            XML::Atom::Activity::ActivityEntry::rebless_plain_entry($entry);
+            XML::Atom::Activity::ActivityEntry->rebless_plain_entry($entry);
         }
         else {
-            $entries[$idx] = $entry->XML::Atom::Activity::ObjectEntry::make_post_activity;
+            $entries[$idx] = $entry->XML::Atom::Activity::ObjectEntry::make_implied_activity;
         }
         $idx++;
     }
@@ -46,4 +46,14 @@ sub entries {
 =head1 NAME
 
 XML::Atom::Activity::Feed - An AtomActivity Feed
+
+=head1 DESCRIPTION
+
+This class has the same interface as L<XML::Atom::Feed> except that
+all entries returned from the C<entries> method will be instances
+of L<XML::Atom::Activity::ActivityEntry>.
+
+If given a feed that contains object entries rather than activity
+entries they will be transformed into the implied activity
+as described in the AtomActivity specification.
 

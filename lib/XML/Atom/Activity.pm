@@ -20,7 +20,6 @@ our @EXPORT_OK = qw(
 use XML::Atom::Activity::ActivityEntry;
 use XML::Atom::Activity::ActivityFeed;
 use XML::Atom::Activity::ObjectEntry;
-#use XML::Atom::Activity::ObjectFeed;
 
 1;
 

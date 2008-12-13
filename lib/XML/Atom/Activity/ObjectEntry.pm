@@ -39,7 +39,14 @@ sub object_types {
     return [ $entry->getlist(ACTIVITY_NAMESPACE, 'object-type') ];
 }
 
-sub make_post_activity {
+sub best_object_type {
+    my ($entry, $selector) = @_;
+
+    my $types = $entry->XML::Atom::Activity::ObjectEntry::object_types;
+    return $selector->find_best_type($types);
+}
+
+sub make_implied_activity {
     my ($entry) = @_;
 
     my $activity = XML::Atom::Activity::ActivityEntry->new(Version => 1.0);
@@ -48,8 +55,29 @@ sub make_post_activity {
     # and the entry's author to include in the title here.
     $activity->title('posted '.$entry->title) if $entry->title;
     $activity->published($entry->published) if $entry->published;
+
+    my $implied_verbs = $entry->XML::Atom::Activity::ActivityEntry::activity_verbs;
+    if (scalar(@$implied_verbs)) {
+        $activity->activity_verbs($implied_verbs);
+    }
+    else {
+        $activity->activity_verbs([ XML::Atom::Activity::POST_VERB_URI ]);
+    }
+
+    # Round-trip through ActivityEntry to get an activity:object element rather than
+    # an atom:entry element. (Blech?)
     $activity->activity_object($entry);
-    $activity->activity_verbs([ XML::Atom::Activity::POST_VERB_URI ]);
+    my $object = $activity->activity_object;
+
+    # Don't want the implied verbs in the object.
+    $object->XML::Atom::Activity::ActivityEntry::activity_verbs([]);
+
+    if (! $activity->has_activity_verb(XML::Atom::Activity::POST_VERB_URI)) {
+        # If the verb isn't post, then we don't know when the object was published.
+        $object->published(undef);
+    }
+
+    $activity->activity_object($object);
 
     return $activity;
 }
@@ -85,11 +113,15 @@ by its title and ignore the type. For example:
 
 Here, "Blah blah blah" is the title of this object.
 
+=head2 $entry->best_object_type($selector)
+
+Given a L<XML::Atom::Activity::TypeSelector> instance, will find the best
+object type using the configured type heirarchy.
+
 =head1 METHODS
 
-=head2 $entry->make_post_activity
+=head2 $entry->make_implied_activity
 
-An object entry with a publication time has an implied "post" activity
-associated with it. This method will create a L<XML::Atom::Activity::ActivityEntry>
-instance that represents this implied activity, or return undef if
-the object does not have a publication time.
+Any object entry has an implied activity associated with it.
+This method will create a L<XML::Atom::Activity::ActivityEntry>
+instance that represents this implied activity.
